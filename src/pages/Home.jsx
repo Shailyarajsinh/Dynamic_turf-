@@ -164,9 +164,9 @@ function HomePage() {
                 <h2 className="text-4xl font-bold text-center text-gray-800">Popular Games</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mt-10">
                     {[
-                        { img: "cricket.jpg", title: "Cricket", desc: "Experience the thrill of batting, bowling, and fielding." },
-                        { img: "football.jpg", title: "Football", desc: "Enjoy the fast-paced action of football with friends." },
-                        { img: "badminton.jpg", title: "Badminton", desc: "Perfect for singles or doubles matches indoors." }
+                        { img: "/cricket.jpg", title: "Cricket", desc: "Experience the thrill of batting, bowling, and fielding." },
+                        { img: "/football.jpg", title: "Football", desc: "Enjoy the fast-paced action of football with friends." },
+                        { img: "/badminton.jpeg", title: "Badminton", desc: "Perfect for singles or doubles matches indoors." }
                     ].map((game, index) => (
                         <div key={index} className="bg-white shadow-xl rounded-xl overflow-hidden transform transition duration-300 hover:scale-105">
                             <img src={game.img} alt={game.title} className="w-full h-56 object-cover" />
