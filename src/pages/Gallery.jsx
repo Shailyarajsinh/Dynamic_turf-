@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import Lightbox from "react-image-lightbox";
-import "react-image-lightbox/style.css";
-
-// import phots from "../../public//";
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
 
 function Gallery() {
     const categories = {
@@ -15,7 +13,7 @@ function Gallery() {
     const [isOpen, setIsOpen] = useState(false);
     const [photoIndex, setPhotoIndex] = useState(0);
 
-    const images = categories[selectedCategory];
+    const images = categories[selectedCategory].map((src) => ({ src }));
 
     return (
         <div className="bg-gray-100 min-h-screen py-12 px-6 md:px-12">
@@ -40,7 +38,7 @@ function Gallery() {
                 </div>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    {images.map((image, index) => (
+                    {categories[selectedCategory].map((image, index) => (
                         <div key={index} className="overflow-hidden rounded-lg shadow-lg cursor-pointer" onClick={() => {
                             setPhotoIndex(index);
                             setIsOpen(true);
@@ -57,12 +55,10 @@ function Gallery() {
 
             {isOpen && (
                 <Lightbox
-                    mainSrc={images[photoIndex]}
-                    nextSrc={images[(photoIndex + 1) % images.length]}
-                    prevSrc={images[(photoIndex + images.length - 1) % images.length]}
-                    onCloseRequest={() => setIsOpen(false)}
-                    onMovePrevRequest={() => setPhotoIndex((photoIndex + images.length - 1) % images.length)}
-                    onMoveNextRequest={() => setPhotoIndex((photoIndex + 1) % images.length)}
+                    open={isOpen}
+                    close={() => setIsOpen(false)}
+                    slides={images}
+                    index={photoIndex}
                 />
             )}
         </div>
