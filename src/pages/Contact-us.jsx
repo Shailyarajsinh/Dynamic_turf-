@@ -12,7 +12,7 @@ function Contact() {
                 <div className="mt-6">
                     <h2 className="text-2xl font-semibold text-gray-800">Reach Us At</h2>
                     <p className="text-gray-700 mt-2">
-                        📍 <span className="font-semibold">Dynamic Turf, Main Street, Your City</span>
+                        📍 <span className="font-semibold">Dynamic Turf, Vadodara, Gujarat</span>
                     </p>
                     <p className="text-gray-700 mt-2">
                         📧 Email: <span className="font-semibold">info@dynamicturf.com</span>

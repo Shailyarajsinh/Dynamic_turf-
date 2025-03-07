@@ -159,26 +159,26 @@ function HomePage() {
                 </div>
             </div>
 
-            {/* Popular Venues Section */}
+            {/* Popular Games Section */}
             <div className="py-16 px-4 md:px-0">
-                <h2 className="text-4xl font-bold text-center text-gray-800">Popular Venues</h2>
+                <h2 className="text-4xl font-bold text-center text-gray-800">Popular Games</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mt-10">
                     {[
-                        { img: "turf.jpg", title: "City Stadium", desc: "Perfect for football and cricket lovers." },
-                        { img: "turf.jpg", title: "Downtown Arena", desc: "Great indoor space for badminton and table tennis." },
-                        { img: "turf.jpg", title: "Community Sports Hub", desc: "Ideal for group bookings and tournaments." }
-
-                    ].map((venue, index) => (
+                        { img: "cricket.jpg", title: "Cricket", desc: "Experience the thrill of batting, bowling, and fielding." },
+                        { img: "football.jpg", title: "Football", desc: "Enjoy the fast-paced action of football with friends." },
+                        { img: "badminton.jpg", title: "Badminton", desc: "Perfect for singles or doubles matches indoors." }
+                    ].map((game, index) => (
                         <div key={index} className="bg-white shadow-xl rounded-xl overflow-hidden transform transition duration-300 hover:scale-105">
-                            <img src={venue.img} alt={venue.title} className="w-full h-56 object-cover" />
+                            <img src={game.img} alt={game.title} className="w-full h-56 object-cover" />
                             <div className="p-6 text-center">
-                                <h3 className="text-xl font-semibold text-gray-800">{venue.title}</h3>
-                                <p className="text-gray-600 mt-2">{venue.desc}</p>
+                                <h3 className="text-xl font-semibold text-gray-800">{game.title}</h3>
+                                <p className="text-gray-600 mt-2">{game.desc}</p>
                             </div>
                         </div>
                     ))}
                 </div>
             </div>
+
 
             {/* 3D Sports Section */}
             <div className="flex justify-center items-center bg-gray-100 py-12 px-4 md:px-0" style={{ backgroundImage: "url('/turf.jpg')" }}>
