@@ -12,8 +12,9 @@ function Navbar() {
         <nav className="bg-white shadow-md">
             <div className="container mx-auto px-6 py-4 flex justify-between items-center">
                 {/* Logo */}
-                <Link to="/" className="text-2xl font-bold text-green-600 flex items-center space-x-2">
-                    <span>⚽ Dynamic Turf </span>
+                <Link to="/" className="text-2xl font-bold text-red-600 flex items-center space-x-2">
+                <img src="/dynamic_turf.jpg" alt="Dynamic Turf" className="w-8 h-8 rounded-4xl" />
+                    <span> Dynamic Turf </span>
                 </Link>
 
                 {/* Desktop Navigation */}
