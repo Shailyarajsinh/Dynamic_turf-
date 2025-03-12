@@ -35,7 +35,7 @@ const BookingSchedule = () => {
   const handleBookNow = async () => {
     if (selectedDate && selectedTime && userName && userPhone) {
       try {
-        const response = await axios.post('http://localhost:5000/api/request-booking', 
+        const response = await axios.post('https://b61b-2409-40c1-4149-da46-2c9c-a446-46df-c37b.ngrok-free.app/api/request-booking', 
           {
           userName,
           userPhone,
