@@ -104,7 +104,7 @@ const BookingSchedule = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg my-5 container mx-auto max-w-md overflow-y-auto" style={{ maxHeight: '80vh' }}>
+    <div className="bg-white p-6 rounded-lg shadow-lg my-5 container mx-auto max-w-md">
       <h2 className="text-2xl font-bold mb-4">Book Your Slot</h2>
 
       <div className="mb-4">
