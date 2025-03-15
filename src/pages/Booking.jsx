@@ -7,6 +7,7 @@ const BookingSchedule = () => {
   const [userName, setUserName] = useState('');
   const [userPhone, setUserPhone] = useState('');
   const [isBooked, setIsBooked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const timeSlots = [
     '08:00 AM - 10:00 AM',
@@ -33,31 +34,40 @@ const BookingSchedule = () => {
   };
 
   const handleBookNow = async () => {
-    if (selectedDate && selectedTime && userName && userPhone) {
-      try {
-        const response = await axios.post('https://turf-webapp.onrender.com/api/request-booking', 
-          {
+    if (!selectedDate || !selectedTime || !userName || !userPhone) {
+      alert('Please fill in all fields.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await axios.post(
+        'https://turf-webapp.onrender.com/api/request-booking',
+        {
           userName,
           userPhone,
           slotTime: selectedTime,
           date: selectedDate,
-        }, 
+        },
         {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (response.status === 200) {
-          setIsBooked(true);
-          alert('Booking request sent to the owner.');
+          headers: { 'Content-Type': 'application/json' },
         }
-      } catch (error) {
-        console.error('Error booking slot:', error);
-        alert('Error booking your slot. Please try again.');
+      );
+
+      if (response.status === 200) {
+        setIsBooked(true);
+        alert('Booking request sent to the owner.');
+        setUserName('');
+        setUserPhone('');
+        setSelectedDate('');
+        setSelectedTime('');
       }
-    } else {
-      alert('Please fill in all fields.');
+    } catch (error) {
+      console.error('Error booking slot:', error);
+      alert('Error booking your slot. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -73,6 +83,7 @@ const BookingSchedule = () => {
           onChange={(e) => setUserName(e.target.value)}
           className="w-full px-4 py-2 rounded-lg border"
           placeholder="Enter your name"
+          disabled={isLoading}
         />
       </div>
 
@@ -84,6 +95,7 @@ const BookingSchedule = () => {
           onChange={(e) => setUserPhone(e.target.value)}
           className="w-full px-4 py-2 rounded-lg border"
           placeholder="Enter your phone number"
+          disabled={isLoading}
         />
       </div>
 
@@ -95,6 +107,7 @@ const BookingSchedule = () => {
           onChange={handleDateChange}
           className="w-full px-4 py-2 rounded-lg border"
           min={new Date().toISOString().split('T')[0]}
+          disabled={isLoading}
         />
       </div>
 
@@ -112,7 +125,7 @@ const BookingSchedule = () => {
                   ? 'bg-green-500 text-white'
                   : 'bg-gray-100 hover:bg-green-500 hover:text-white'
               }`}
-              disabled={bookedSlots.includes(time)}
+              disabled={bookedSlots.includes(time) || isLoading}
             >
               {time}
             </button>
@@ -122,9 +135,22 @@ const BookingSchedule = () => {
 
       <button
         onClick={handleBookNow}
-        className="w-full bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600"
+        className={`w-full text-white px-6 py-2 rounded-lg ${
+          isLoading ? 'bg-gray-500 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'
+        }`}
+        disabled={isLoading}
       >
-        Book Now
+        {isLoading ? (
+          <div className="flex justify-center items-center">
+            <svg
+              className="animate-spin h-5 w-5 mr-3 border-t-2 border-white rounded-full"
+              viewBox="0 0 24 24"
+            ></svg>
+            Processing...
+          </div>
+        ) : (
+          'Book Now'
+        )}
       </button>
 
       {isBooked && (
