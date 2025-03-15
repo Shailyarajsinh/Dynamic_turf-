@@ -24,7 +24,7 @@ const [bookingData, setBookingData] = useState([]);
 const [bookedSlots, setBookedSlots] = useState([]);
 
 useEffect(() => {
-  axios.get('http://localhost:5000/api/booking')
+  axios.get('https://dynamic-turf.onrender.com/api/booking')
   .then((response) => {
     setBookingData(response.data);
     console.log('Booking data:', response.data);
@@ -65,7 +65,7 @@ useEffect(() => {
 
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/request-booking',
+        'https://dynamic-turf.onrender.com/api/request-booking',
         {
           userName,
           userPhone,
