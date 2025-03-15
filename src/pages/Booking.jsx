@@ -8,7 +8,8 @@ const BookingSchedule = () => {
   const [userPhone, setUserPhone] = useState('');
   const [isBooked, setIsBooked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(''); // State for error messages
+  const [errorMessage, setErrorMessage] = useState('');
+  const [bookingData, setBookingData] = useState([]);
 
   const timeSlots = [
     '08:00 AM - 09:00 AM',
@@ -27,9 +28,6 @@ const BookingSchedule = () => {
     '09:00 PM - 10:00 PM',
   ];
 
-  const [bookingData, setBookingData] = useState([]);
-  const [bookedSlots, setBookedSlots] = useState([]);
-
   useEffect(() => {
     axios
       .get('https://turf-webapp.onrender.com/api/booking')
@@ -43,11 +41,6 @@ const BookingSchedule = () => {
       });
   }, []);
 
-  useEffect(() => {
-    const slots = bookingData.map((booking) => booking.slotTime);
-    setBookedSlots(slots);
-  }, [bookingData, selectedDate]);
-
   const handleDateChange = (e) => {
     setSelectedDate(e.target.value);
     setSelectedTime('');
@@ -56,9 +49,7 @@ const BookingSchedule = () => {
   };
 
   const handleTimeSlotClick = (time) => {
-    if (!bookedSlots.includes(time)) {
-      setSelectedTime(time);
-    }
+    setSelectedTime(time);
   };
 
   const handleBookNow = async () => {
@@ -67,8 +58,18 @@ const BookingSchedule = () => {
       return;
     }
 
+    // Check if the selected date and time is already booked
+    const isAlreadyBooked = bookingData.some(
+      (booking) => booking.date === selectedDate && booking.slotTime === selectedTime
+    );
+
+    if (isAlreadyBooked) {
+      setErrorMessage('This time slot is already booked. Please select another slot.');
+      return;
+    }
+
     setIsLoading(true);
-    setErrorMessage(''); // Reset error message before making the request
+    setErrorMessage('');
 
     try {
       const response = await axios.post(
@@ -146,22 +147,28 @@ const BookingSchedule = () => {
       <div className="mb-4">
         <label className="block text-gray-700">Select Time Slot</label>
         <div className="grid grid-cols-2 gap-4 mt-2">
-          {timeSlots.map((time, index) => (
-            <button
-              key={index}
-              onClick={() => handleTimeSlotClick(time)}
-              className={`px-3 py-3 rounded-lg ${
-                bookedSlots.includes(time)
-                  ? 'bg-gray-300 cursor-not-allowed'
-                  : selectedTime === time
-                  ? 'bg-green-500 text-white'
-                  : 'bg-gray-100 hover:bg-green-500 hover:text-white'
-              }`}
-              disabled={bookedSlots.includes(time) || isLoading}
-            >
-              {time}
-            </button>
-          ))}
+          {timeSlots.map((time, index) => {
+            const isAlreadyBooked = bookingData.some(
+              (booking) => booking.date === selectedDate && booking.slotTime === time
+            );
+
+            return (
+              <button
+                key={index}
+                onClick={() => handleTimeSlotClick(time)}
+                className={`px-3 py-3 rounded-lg ${
+                  isAlreadyBooked
+                    ? 'bg-gray-300 cursor-not-allowed'
+                    : selectedTime === time
+                    ? 'bg-green-500 text-white'
+                    : 'bg-gray-100 hover:bg-green-500 hover:text-white'
+                }`}
+                disabled={isAlreadyBooked || isLoading}
+              >
+                {time}
+              </button>
+            );
+          })}
         </div>
       </div>
 
