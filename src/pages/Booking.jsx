@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+
 
 const BookingSchedule = () => {
   const [selectedDate, setSelectedDate] = useState('');
@@ -19,7 +20,28 @@ const BookingSchedule = () => {
     '08:00 PM - 10:00 PM',
   ];
 
-  const bookedSlots = ['12:00 PM - 02:00 PM', '04:00 PM - 06:00 PM'];
+const [bookingData, setBookingData] = useState([]);
+const [bookedSlots, setBookedSlots] = useState([]);
+
+useEffect(() => {
+  axios.get('http://localhost:5000/api/booking')
+  .then((response) => {
+    setBookingData(response.data);
+    console.log('Booking data:', response.data);
+  })
+  .catch((error) => {
+    console.error('Error fetching bookings:', error);
+  });
+}, []);
+
+useEffect(() => {
+  const slots = [];
+  for (let i = 0; i < bookingData.length; i++) {
+    slots.push(bookingData[i].slotTime);
+  }
+  setBookedSlots(slots);
+}, [bookingData, selectedDate]);
+  
 
   const handleDateChange = (e) => {
     setSelectedDate(e.target.value);
@@ -43,7 +65,7 @@ const BookingSchedule = () => {
 
     try {
       const response = await axios.post(
-        'https://turf-webapp.onrender.com/api/request-booking',
+        'http://localhost:5000/api/request-booking',
         {
           userName,
           userPhone,
@@ -63,6 +85,9 @@ const BookingSchedule = () => {
         setSelectedDate('');
         setSelectedTime('');
       }
+
+      console.log('Booking response:', response? response.data : 'No response');
+
     } catch (error) {
       console.error('Error booking slot:', error);
       alert('Error booking your slot. Please try again.');
