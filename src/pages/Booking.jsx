@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-
 const BookingSchedule = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
@@ -9,44 +8,51 @@ const BookingSchedule = () => {
   const [userPhone, setUserPhone] = useState('');
   const [isBooked, setIsBooked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(''); // State for error messages
 
   const timeSlots = [
-    '08:00 AM - 10:00 AM',
-    '10:00 AM - 12:00 PM',
-    '12:00 PM - 02:00 PM',
-    '02:00 PM - 04:00 PM',
-    '04:00 PM - 06:00 PM',
-    '06:00 PM - 08:00 PM',
-    '08:00 PM - 10:00 PM',
+    '08:00 AM - 09:00 AM',
+    '09:00 AM - 10:00 AM',
+    '10:00 AM - 11:00 AM',
+    '11:00 AM - 12:00 PM',
+    '12:00 PM - 01:00 PM',
+    '01:00 PM - 02:00 PM',
+    '02:00 PM - 03:00 PM',
+    '03:00 PM - 04:00 PM',
+    '04:00 PM - 05:00 PM',
+    '05:00 PM - 06:00 PM',
+    '06:00 PM - 07:00 PM',
+    '07:00 PM - 08:00 PM',
+    '08:00 PM - 09:00 PM',
+    '09:00 PM - 10:00 PM',
   ];
 
-const [bookingData, setBookingData] = useState([]);
-const [bookedSlots, setBookedSlots] = useState([]);
+  const [bookingData, setBookingData] = useState([]);
+  const [bookedSlots, setBookedSlots] = useState([]);
 
-useEffect(() => {
-  axios.get('https://turf-webapp.onrender.com/api/booking')
-  .then((response) => {
-    setBookingData(response.data);
-    console.log('Booking data:', response.data);
-  })
-  .catch((error) => {
-    console.error('Error fetching bookings:', error);
-  });
-}, []);
+  useEffect(() => {
+    axios
+      .get('https://turf-webapp.onrender.com/api/booking')
+      .then((response) => {
+        setBookingData(response.data);
+        console.log('Booking data:', response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching bookings:', error);
+        setErrorMessage('Failed to load booking data. Please try again.');
+      });
+  }, []);
 
-useEffect(() => {
-  const slots = [];
-  for (let i = 0; i < bookingData.length; i++) {
-    slots.push(bookingData[i].slotTime);
-  }
-  setBookedSlots(slots);
-}, [bookingData, selectedDate]);
-  
+  useEffect(() => {
+    const slots = bookingData.map((booking) => booking.slotTime);
+    setBookedSlots(slots);
+  }, [bookingData, selectedDate]);
 
   const handleDateChange = (e) => {
     setSelectedDate(e.target.value);
     setSelectedTime('');
     setIsBooked(false);
+    setErrorMessage('');
   };
 
   const handleTimeSlotClick = (time) => {
@@ -57,11 +63,12 @@ useEffect(() => {
 
   const handleBookNow = async () => {
     if (!selectedDate || !selectedTime || !userName || !userPhone) {
-      alert('Please fill in all fields.');
+      setErrorMessage('Please fill in all fields.');
       return;
     }
 
     setIsLoading(true);
+    setErrorMessage(''); // Reset error message before making the request
 
     try {
       const response = await axios.post(
@@ -79,18 +86,18 @@ useEffect(() => {
 
       if (response.status === 200) {
         setIsBooked(true);
-        alert('Booking request sent to the owner.');
         setUserName('');
         setUserPhone('');
         setSelectedDate('');
         setSelectedTime('');
+      } else {
+        setErrorMessage('Something went wrong. Please try again.');
       }
 
-      console.log('Booking response:', response? response.data : 'No response');
-
+      console.log('Booking response:', response?.data || 'No response');
     } catch (error) {
       console.error('Error booking slot:', error);
-      alert('Error booking your slot. Please try again.');
+      setErrorMessage('Error while booking. Please check your details and try again.');
     } finally {
       setIsLoading(false);
     }
@@ -178,9 +185,16 @@ useEffect(() => {
         )}
       </button>
 
+      {errorMessage && (
+        <div className="mt-4 text-center text-red-500 font-semibold">
+          🤔oops! {errorMessage}
+          our team is working on it thanks for your patience.
+        </div>
+      )}
+
       {isBooked && (
-        <div className="mt-4 text-green-600">
-          Booking request sent for {selectedDate} at {selectedTime}!
+        <div className="mt-4 text-center text-green-500 font-semibold">
+        your request for reservation has been received our team will contact you soon 😊
         </div>
       )}
     </div>
