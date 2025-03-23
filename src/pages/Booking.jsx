@@ -34,7 +34,7 @@ const BookingSchedule = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:5000/api/booking')
+      .get('https://turf-webapp.onrender.com/api/booking')
       .then((response) => {
         setBookingData(response.data);
         // console.log('Booking data:', response.data);
@@ -94,7 +94,7 @@ const BookingSchedule = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/request-booking',
+        'https://turf-webapp.onrender.com/api/request-booking',
         {
           userName,
           userPhone,
