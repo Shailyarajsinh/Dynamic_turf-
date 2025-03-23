@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const BookingSchedule = () => {
   const [selectedDate, setSelectedDate] = useState('');
-  const [selectedTime, setSelectedTime] = useState('');
+  const [selectedTime, setSelectedTime] = useState([]);
   const [userName, setUserName] = useState('');
   const [userPhone, setUserPhone] = useState('');
   const [isBooked, setIsBooked] = useState(false);
@@ -12,6 +12,8 @@ const BookingSchedule = () => {
   const [bookingData, setBookingData] = useState([]);
 
   const timeSlots = [
+    '06:00 AM - 07:00 AM',
+    '07:00 AM - 08:00 AM',
     '08:00 AM - 09:00 AM',
     '09:00 AM - 10:00 AM',
     '10:00 AM - 11:00 AM',
@@ -26,20 +28,29 @@ const BookingSchedule = () => {
     '07:00 PM - 08:00 PM',
     '08:00 PM - 09:00 PM',
     '09:00 PM - 10:00 PM',
+    '10:00 PM - 11:00 PM',
+    '11:00 PM - 12:00 AM',
   ];
 
   useEffect(() => {
     axios
-      .get('https://turf-webapp.onrender.com/api/booking')
+      .get('http://localhost:5000/api/booking')
       .then((response) => {
         setBookingData(response.data);
-        console.log('Booking data:', response.data);
+        // console.log('Booking data:', response.data);
       })
       .catch((error) => {
-        console.error('Error fetching bookings:', error);
+        // console.error('Error fetching bookings:', error);
         setErrorMessage('Failed to load booking data. Please try again.');
       });
+      
   }, []);
+  // console.log(bookingData.map((booking) => booking.slotTimes));
+  const allBookedSlots = bookingData.flatMap((booking) => booking.slotTimes);
+  // console.log(allBookedSlots);
+
+ 
+
 
   const handleDateChange = (e) => {
     setSelectedDate(e.target.value);
@@ -49,22 +60,32 @@ const BookingSchedule = () => {
   };
 
   const handleTimeSlotClick = (time) => {
-    setSelectedTime(time);
+    setSelectedTime((prevSelected) =>
+      prevSelected.includes(time)
+        ? prevSelected.filter((t) => t !== time) // Remove if already selected
+        : [...prevSelected, time] // Add if not selected
+    );
   };
 
+
   const handleBookNow = async () => {
-    if (!selectedDate || !selectedTime || !userName || !userPhone) {
+    if (!selectedDate || selectedTime.length === 0 || !userName || !userPhone) {
       setErrorMessage('Please fill in all fields.');
       return;
     }
 
-    // Check if the selected date and time is already booked
-    const isAlreadyBooked = bookingData.some(
-      (booking) => booking.date === selectedDate && booking.slotTime === selectedTime
+    // Check if any selected time slot is already booked
+    // const selectedTimeSlots = Object.values(bookingData).flatMap((booking) => booking.slotTimes);
+    // console.log('selectedTime:', selectedTimeSlots);
+
+    const isAlreadyBooked = selectedTime.some((time) =>
+      bookingData.some(
+        (booking) => booking.date === selectedDate && allBookedSlots.includes(time)
+      )
     );
 
     if (isAlreadyBooked) {
-      setErrorMessage('This time slot is already booked. Please select another slot.');
+      setErrorMessage('One or more selected time slots are already booked. Please choose another.');
       return;
     }
 
@@ -73,11 +94,11 @@ const BookingSchedule = () => {
 
     try {
       const response = await axios.post(
-        'https://turf-webapp.onrender.com/api/request-booking',
+        'http://localhost:5000/api/request-booking',
         {
           userName,
           userPhone,
-          slotTime: selectedTime,
+          slotTimes: selectedTime, // Send an array of selected slots
           date: selectedDate,
         },
         {
@@ -90,19 +111,18 @@ const BookingSchedule = () => {
         setUserName('');
         setUserPhone('');
         setSelectedDate('');
-        setSelectedTime('');
+        setSelectedTime([]); // Clear selected times
       } else {
         setErrorMessage('Something went wrong. Please try again.');
       }
-
-      console.log('Booking response:', response?.data || 'No response');
     } catch (error) {
-      console.error('Error booking slot:', error);
+      // console.error('Error booking slot:', error);
       setErrorMessage('Error while booking. Please check your details and try again.');
     } finally {
       setIsLoading(false);
     }
   };
+
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg my-5 container mx-auto max-w-md">
@@ -149,24 +169,24 @@ const BookingSchedule = () => {
         <div className="grid grid-cols-2 gap-4 mt-2">
           {timeSlots.map((time, index) => {
             const isAlreadyBooked = bookingData.some(
-              (booking) => booking.date === selectedDate && booking.slotTime === time
+              (booking) => booking.date === selectedDate && booking.slotTimes.includes(time)
             );
 
             return (
               <button
                 key={index}
                 onClick={() => handleTimeSlotClick(time)}
-                className={`px-3 py-3 rounded-lg ${
-                  isAlreadyBooked
-                    ? 'bg-gray-300 cursor-not-allowed'
-                    : selectedTime === time
+                className={`px-3 py-3 rounded-lg ${isAlreadyBooked
+                  ? 'bg-gray-300 cursor-not-allowed'
+                  : selectedTime.includes(time)
                     ? 'bg-green-500 text-white'
                     : 'bg-gray-100 hover:bg-green-500 hover:text-white'
-                }`}
+                  }`}
                 disabled={isAlreadyBooked || isLoading}
               >
                 {time}
               </button>
+
             );
           })}
         </div>
@@ -174,9 +194,8 @@ const BookingSchedule = () => {
 
       <button
         onClick={handleBookNow}
-        className={`w-full text-white px-6 py-2 rounded-lg ${
-          isLoading ? 'bg-gray-500 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'
-        }`}
+        className={`w-full text-white px-6 py-2 rounded-lg ${isLoading ? 'bg-gray-500 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'
+          }`}
         disabled={isLoading}
       >
         {isLoading ? (
@@ -195,13 +214,12 @@ const BookingSchedule = () => {
       {errorMessage && (
         <div className="mt-4 text-center text-red-500 font-semibold">
           🤔oops! {errorMessage}
-          our team is working on it thanks for your patience.
         </div>
       )}
 
       {isBooked && (
         <div className="mt-4 text-center text-green-500 font-semibold">
-        your request for reservation has been received our team will contact you soon 😊
+          your request for reservation has been received our team will contact you soon 😊
         </div>
       )}
     </div>

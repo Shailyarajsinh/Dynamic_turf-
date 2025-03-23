@@ -28,7 +28,7 @@ function AboutUs() {
                 <h2 className="text-2xl font-semibold text-gray-800 mt-6">Get in Touch</h2>
                 <p className="text-gray-700 mt-3">
                     Have questions or want to book your next game? Contact us at
-                    <span className="font-semibold"> info@dynamicturf.com</span> or visit us in person!
+                    <span> <a href="mailto:dynamicturf01@gmail.com" className="font-semibold">dynamicturf01@gmail.com</a></span> or visit us in person!
                 </p>
             </div>
         </div>

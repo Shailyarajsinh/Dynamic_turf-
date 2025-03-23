@@ -12,13 +12,13 @@ function Contact() {
                 <div className="mt-6">
                     <h2 className="text-2xl font-semibold text-gray-800">Reach Us At</h2>
                     <p className="text-gray-700 mt-2">
-                        📍 <span className="font-semibold">Dynamic Turf, Vadodara, Gujarat</span>
+                        📍 <span><a href="https://www.google.com/maps/place/Dynamic+Turf/@22.2969637,73.1482118,310m/data=!3m1!1e3!4m6!3m5!1s0x395fc9c150b86f97:0x94d8820497ca3ebb!8m2!3d22.2966274!4d73.1472503!16s%2Fg%2F11x36l4fmd?entry=ttu&g_ep=EgoyMDI1MDMxOC4wIKXMDSoJLDEwMjExNDUzSAFQAw%3D%3D" target="_blank" rel="noopener noreferrer" className="font-semibold">Dynamic Turf, Vadodara, Gujarat</a></span>
                     </p>
                     <p className="text-gray-700 mt-2">
-                        📧 Email: <span className="font-semibold">info@dynamicturf.com</span>
+                        📧 Email: <a href="mailto:dynamicturf01@gmail.com" className="font-semibold">dynamicturf01@gmail.com</a>
                     </p>
                     <p className="text-gray-700 mt-2">
-                        📞 Phone: <span className="font-semibold">+123 456 7890</span>
+                        📞 Phone: <span><a href="tel:+917600671251" className="font-semibold">+91 7600671251</a></span>
                     </p>
                 </div>
                 

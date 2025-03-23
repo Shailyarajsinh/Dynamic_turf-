@@ -35,9 +35,9 @@ const Footer = () => {
           <div>
             <h3 className="text-xl font-bold">Contact Us</h3>
             <ul className="mt-2 space-y-2 text-gray-400">
-              <li>Email: support@turfbooking.com</li>
-              <li>Phone: +91 1234567890</li>
-              <li>Address: Vadodara, Gujarat, India</li>
+              <li>Email: <a href="mailto:dynamicturf01@gmail.com" className="font-semibold">dynamicturf01@gmail.com</a></li>
+              <li>Phone: <a href="tel:+917600671251" className="font-semibold">+91 7600671251</a></li>
+              <li>Address: <a href="https://www.google.com/maps/place/Dynamic+Turf/@22.2969637,73.1482118,310m/data=!3m1!1e3!4m6!3m5!1s0x395fc9c150b86f97:0x94d8820497ca3ebb!8m2!3d22.2966274!4d73.1472503!16s%2Fg%2F11x36l4fmd?entry=ttu&g_ep=EgoyMDI1MDMxOC4wIKXMDSoJLDEwMjExNDUzSAFQAw%3D%3D" target="_blank" rel="noopener noreferrer" className="font-semibold">Dynamic Turf, Vadodara, Gujarat</a></li>
             </ul>
             <div className="mt-4 flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-green-500">
