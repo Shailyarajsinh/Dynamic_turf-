@@ -94,7 +94,7 @@ const BookingSchedule = () => {
 
     try {
       const response = await axios.post(
-        'https://turf-webapp.onrender.comapi/request-booking',
+        'https://turf-webapp.onrender.com/api/request-booking',
         {
           userName,
           userPhone,
