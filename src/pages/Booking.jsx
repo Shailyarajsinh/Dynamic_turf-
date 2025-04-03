@@ -37,19 +37,19 @@ const BookingSchedule = () => {
       .get('https://turf-webapp.onrender.com/api/booking')
       .then((response) => {
         setBookingData(response.data);
-        // console.log('Booking data:', response.data);
+        console.log('Booking data:', response.data);
       })
       .catch((error) => {
         // console.error('Error fetching bookings:', error);
         setErrorMessage('Failed to load booking data. Please try again.');
       });
-      
+
   }, []);
-  // console.log(bookingData.map((booking) => booking.slotTimes));
+  console.log(bookingData);
   const allBookedSlots = bookingData.flatMap((booking) => booking.slotTimes);
   // console.log(allBookedSlots);
 
- 
+
 
 
   const handleDateChange = (e) => {
@@ -94,7 +94,7 @@ const BookingSchedule = () => {
 
     try {
       const response = await axios.post(
-        'https://turf-webapp.onrender.com/api/request-booking',
+        'https://turf-webapp.onrender.comapi/request-booking',
         {
           userName,
           userPhone,
@@ -166,30 +166,82 @@ const BookingSchedule = () => {
 
       <div className="mb-4">
         <label className="block text-gray-700">Select Time Slot</label>
-        <div className="grid grid-cols-2 gap-4 mt-2">
-          {timeSlots.map((time, index) => {
-            const isAlreadyBooked = bookingData.some(
-              (booking) => booking.date === selectedDate && booking.slotTimes.includes(time)
-            );
+        <div className="mb-4">
 
-            return (
-              <button
-                key={index}
-                onClick={() => handleTimeSlotClick(time)}
-                className={`px-3 py-3 rounded-lg ${isAlreadyBooked
-                  ? 'bg-gray-300 cursor-not-allowed'
-                  : selectedTime.includes(time)
-                    ? 'bg-green-500 text-white'
-                    : 'bg-gray-100 hover:bg-green-500 hover:text-white'
-                  }`}
-                disabled={isAlreadyBooked || isLoading}
-              >
-                {time}
-              </button>
+          {/* Color Legend */}
+          <table className="table-auto w-full text-left text-sm text-gray-700 mb-4">
+            <thead>
+              <tr>
+                <th className="px-4 py-2">Status</th>
+                <th className="px-4 py-2">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="px-4 py-2">
+                  <span className="w-4 h-4 bg-gray-300 inline-block rounded mr-2"></span>
+                  Confirmed (Unavailable)
+                </td>
+                <td className="px-4 py-2">Slot is already booked and unavailable.</td>
+              </tr>
+              <tr>
+                <td className="px-4 py-2">
+                  <span className="w-4 h-4 bg-yellow-500 inline-block rounded mr-2"></span>
+                  Pending (May be approved)
+                </td>
+                <td className="px-4 py-2">Slot is pending approval and may become available.</td>
+              </tr>
+              <tr>
+                <td className="px-4 py-2">
+                  <span className="w-4 h-4 bg-green-500 inline-block rounded mr-2"></span>
+                  Selected
+                </td>
+                <td className="px-4 py-2">Slot is selected by the user for booking.</td>
+              </tr>
+              <tr>
+                <td className="px-4 py-2">
+                  <span className="w-4 h-4 bg-gray-100 inline-block border border-gray-400 rounded mr-2"></span>
+                  Available
+                </td>
+                <td className="px-4 py-2">Slot is available for booking.</td>
+              </tr>
+            </tbody>
+          </table>
 
-            );
-          })}
+          <div className="max-h-[250px] overflow-y-auto border border-gray-300 rounded-lg p-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+              {timeSlots.map((time, index) => {
+                const booking = bookingData.find(
+                  (b) => b.date === selectedDate && b.slotTimes.includes(time)
+                );
+
+                const isConfirmed = booking?.status === 'confirmed';
+                const isPending = booking?.status === 'pending';
+
+                return (
+                  <button
+                    key={index}
+                    onClick={() => handleTimeSlotClick(time)}
+                    className={`text-sm font-medium px-2 py-2 rounded-lg text-center transition-all ${isConfirmed
+                        ? 'bg-gray-300 cursor-not-allowed text-gray-700'
+                        : isPending
+                          ? 'bg-yellow-500 text-white'
+                          : selectedTime.includes(time)
+                            ? 'bg-green-500 text-white'
+                            : 'bg-gray-100 hover:bg-green-500 hover:text-white'
+                      }`}
+                    disabled={isConfirmed || isLoading}
+                  >
+                    {time}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+
         </div>
+
       </div>
 
       <button

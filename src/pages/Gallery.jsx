@@ -4,9 +4,9 @@ import "yet-another-react-lightbox/styles.css";
 
 function Gallery() {
     const categories = {
-        Football: ["../../turf.jpg", "../../turf.jpg", "../../turf.jpg"],
-        Cricket: ["../../turf.jpg", "../../turf.jpg", "../../turf.jpg"],
-        Events: ["../../turf.jpg", "../../turf.jpg", "../../turf.jpg"],
+        Football: ["../../football_1.jfif", "../../comming_soon.png", "../../comming_soon.png"],
+        Cricket: ["../../pic_1.png", "../../pic_2.png", "../../pic_3.png","../../pic_4.png"],
+        Events: ["../../comming_soon.png", "../../comming_soon.png", "../../comming_soon.png"],
     };
 
     const [selectedCategory, setSelectedCategory] = useState("Football");
