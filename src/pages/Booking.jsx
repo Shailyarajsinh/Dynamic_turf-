@@ -37,7 +37,7 @@ const BookingSchedule = () => {
       .get('https://turf-webapp.onrender.com/api/booking')
       .then((response) => {
         setBookingData(response.data);
-        console.log('Booking data:', response.data);
+        // console.log('Booking data:', response.data);
       })
       .catch((error) => {
         // console.error('Error fetching bookings:', error);
@@ -45,7 +45,7 @@ const BookingSchedule = () => {
       });
 
   }, []);
-  console.log(bookingData);
+  // console.log(bookingData);
   const allBookedSlots = bookingData.flatMap((booking) => booking.slotTimes);
   // console.log(allBookedSlots);
 
